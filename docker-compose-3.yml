@@ -1,0 +1,31 @@
+version: '3'
+services:
+
+  db:
+    image: mongo:latest
+    volumes:
+      - mongodbdata:/data/db
+    ports:
+      - 27017:27017
+    
+  api:
+    image: taleemhelp/api:0.4
+    depends_on:
+      - db
+    ports:
+      - 5000:5000
+    environment:
+      SERVER_IP: "127.0.0.1"
+      JWT_SECRET: "frd6Sb14FDu810XzAJwQ09KcMwwIc39NDFGsdyt8"
+      JWT_REFRESH_TOKEN: "S4FDu810GsdytXzAJwQ09Kb1cMwwIc39NDF8frd6"
+      MONGO_DB_URL: "mongodb://db:27017/taleem_db"
+
+  ui:
+    image: taleemhelp/ui:0.4 
+    ports:
+      - 3000:3000
+    environment:
+      SERVER_IP: "127.0.0.1"
+
+volumes:
+  mongodbdata:

@@ -1,0 +1,39 @@
+version: '3'
+services:
+
+  db:
+    image: mongo:latest
+    volumes:
+      - mongodbdata:/data/db
+    ports:
+      - 27017:27017
+    
+  api:
+    build: ./api
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+    environment:
+      JWT_SECRET: "frd6Sb14FDu810XzAJwQ09KcMwwIc39NDFGsdyt8"
+      JWT_REFRESH_TOKEN: "S4FDu810GsdytXzAJwQ09Kb1cMwwIc39NDF8frd6"
+      MONGO_DB_URL: "mongodb://db:27017/taleem_db"
+      
+
+  ui:
+    build: ./ui
+    depends_on:
+      - api
+  
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - ui
+      - api
+
+volumes:
+  mongodbdata:
